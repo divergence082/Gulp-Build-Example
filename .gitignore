@@ -1,4 +1,6 @@
 .idea/
+bin/
+externs/
 node_modules/
 *.iml
 *.log

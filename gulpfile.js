@@ -1,13 +1,12 @@
 
 
 var gulp = require('gulp');
+var del = require('del');
 var concat = require('gulp-concat');
 var wrapper = require('gulp-wrapper');
 var externs = require('gulp-externs');
 var gjslint = require('gulp-gjslint');
-var uglify = require('gulp-uglify');
 var compiler = require('gulp-closure-compiler');
-var del = require('del');
 
 
 /**
