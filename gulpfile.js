@@ -2,23 +2,22 @@
 
 var gulp = require('gulp');
 var del = require('del');
-var concat = require('gulp-concat');
-var wrapper = require('gulp-wrapper');
+var include = require('gulp-file-include');
 var externs = require('gulp-externs');
 var gjslint = require('gulp-gjslint');
 var compiler = require('gulp-closure-compiler');
 
 
 /**
- * List os sources or mask for them (src/*). Simply globs.
+ * List os sources or mask for them (lib/*). Simply globs.
  */
 var src = [
-  'src/gb/gb.js',
-  'src/gb/enum.js',
-  'src/gb/i-class.js',
-  'src/gb/class.js',
-  'src/gb/inherit-class.js',
-  'src/gb/ex/ex.js'
+  'lib/gb/gb.js',
+  'lib/gb/enum.js',
+  'lib/gb/i-class.js',
+  'lib/gb/class.js',
+  'lib/gb/inherit-class.js',
+  'lib/gb/ex/ex.js'
 ];
 
 
@@ -47,8 +46,8 @@ gulp.task('check', function() {
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
           language_in: 'ECMASCRIPT5_STRICT',
           externs: [
-            'externs/node/v0.10.25/module.js',
-            'externs/node/v0.10.25/util.js'
+            'node_modules/gulp-externs/externs/node/v0.10.25/module.js',
+            'node_modules/gulp-externs/externs/node/v0.10.25/util.js'
           ],
           jscomp_error: ['checkTypes', 'suspiciousCode',
             'ambiguousFunctionDecl', 'checkDebuggerStatement', 'checkRegExp',
@@ -66,7 +65,7 @@ gulp.task('check', function() {
  */
 gulp.task('clean', function() {
   del('bin');
-  del('externs/index.js');
+  del('externs');
 });
 
 
@@ -76,16 +75,10 @@ gulp.task('clean', function() {
  * grants read + write + execute permissions
  */
 gulp.task('build', ['clean'], function() {
-  gulp.src(src)
-      .pipe(concat({
-        path: 'index.js',
-        stat: {
-          mode: 0777
-        }
-      }))
-      .pipe(wrapper({
-        header: "\n\nvar util = require('util');\n",
-        footer: "\n\nmodule.exports = gb;\n"
+  gulp.src('lib/index.js')
+      .pipe(include({
+        prefix: '//',
+        basepath: 'lib'
       }))
       .pipe(gulp.dest('bin'));
 });
