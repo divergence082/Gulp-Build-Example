@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var del = require('del');
+var chmod = require('gulp-chmod');
 var include = require('gulp-file-include');
 var externs = require('gulp-externs');
 var gjslint = require('gulp-gjslint');
@@ -70,8 +71,7 @@ gulp.task('clean', function() {
 
 
 /**
- * Concatenates sources to bin/index.js,
- * adds header and footer and
+ * Inserts files into lib/index.js, and
  * grants read + write + execute permissions
  */
 gulp.task('build', ['clean'], function() {
@@ -80,6 +80,7 @@ gulp.task('build', ['clean'], function() {
         prefix: '//',
         basepath: 'lib'
       }))
+      .pipe(chmod(777))
       .pipe(gulp.dest('bin'));
 });
 
