@@ -26,7 +26,7 @@ var src = [
  * Checks codestyle with Closule Linter
  */
 gulp.task('lint', function() {
-  gulp.src(src)
+  return gulp.src(src)
       .pipe(gjslint({
         flags: ['--strict', '--custom_jsdoc_tags namespace, event']
       }))
@@ -39,7 +39,7 @@ gulp.task('lint', function() {
  * Checks code with Closure Compiler
  */
 gulp.task('check', function() {
-  gulp.src(src)
+  return gulp.src(src)
       .pipe(compiler({
         compilerPath: '/usr/lib/node_modules/compiler.jar',
         fileName: 'index.js',
@@ -64,9 +64,10 @@ gulp.task('check', function() {
 /**
  * Removes all built data.
  */
-gulp.task('clean', function() {
-  del('bin');
-  del('externs');
+gulp.task('clean', function(callback) {
+  del(['bin', 'externs'], {
+    force: true
+  }, callback);
 });
 
 
@@ -75,7 +76,7 @@ gulp.task('clean', function() {
  * grants read + write + execute permissions
  */
 gulp.task('build', ['clean'], function() {
-  gulp.src('lib/index.js')
+  return gulp.src('lib/index.js')
       .pipe(include({
         prefix: '//',
         basepath: 'lib'
@@ -92,7 +93,7 @@ gulp.task('build', ['clean'], function() {
  * Executes only after `build`.
  */
 gulp.task('externs', ['build'], function() {
-  gulp.src('bin/index.js')
+  return gulp.src('bin/index.js')
       .pipe(externs.extract())
       .pipe(gulp.dest('externs'));
 });
